@@ -26,6 +26,13 @@ import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class SettingsActivity extends PreferenceActivity  {
 
     public static String MY_UID;
@@ -34,15 +41,13 @@ public class SettingsActivity extends PreferenceActivity  {
     PreferenceFragment myPrefs;
     FragmentManager fragMan;
     FragmentTransaction fragTran;
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            MY_UID = extras.getString("uid");
-        }
+        MY_UID = readUIDFromInternalStorage();
 
         // Display the fragment as the main content.
         fragMan = getFragmentManager();
@@ -50,6 +55,27 @@ public class SettingsActivity extends PreferenceActivity  {
         myPrefs = new PrefsFragment();
         fragTran.replace(android.R.id.content, myPrefs);
         fragTran.commit();
+    }
+
+    public String readUIDFromInternalStorage() {
+        FileInputStream fis = null;
+        try {
+            fis = this.openFileInput("fmf_user_profile_uid.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        InputStreamReader isr = new InputStreamReader(fis);
+        BufferedReader bufferedReader = new BufferedReader(isr);
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try {
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString().trim();
     }
 
     @Override
@@ -84,9 +110,6 @@ public class SettingsActivity extends PreferenceActivity  {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            //prefs = PrefsFragment.this.getSharedPreferences(this, 0);
-            //String myVariable = prefs.getString("UID", MY_UID);
-
             MY_UID = SettingsActivity.MY_UID;
 
             firebaseAuth = FirebaseAuth.getInstance();
@@ -99,12 +122,14 @@ public class SettingsActivity extends PreferenceActivity  {
             fname = (EditTextPreference) findPreference("firstName");
             lname = (EditTextPreference) findPreference("lastName");
 
+
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
             profTitle.setTitle("Profile Settings ("+email_value+")");
             user.setSummary(sp.getString("username", username_value));
             fname.setSummary(sp.getString("firstName", fname_value));
             lname.setSummary(sp.getString("lastName", lname_value));
+            //MY_UID = prefs.getString("UID", MY_UID);
 
             dataRef.child("Users").child(MY_UID).child("username").addValueEventListener(new ValueEventListener() {
                 @Override
@@ -149,10 +174,6 @@ public class SettingsActivity extends PreferenceActivity  {
         @Override
         public void onPause() {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-            //prefs = PrefsFragment.this.getSharedPreferences(this, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("UID", MY_UID);
-            editor.commit();
             super.onPause();
         }
 

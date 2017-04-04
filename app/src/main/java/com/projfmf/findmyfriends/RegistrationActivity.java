@@ -1,6 +1,7 @@
 package com.projfmf.findmyfriends;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by traceys5 on 3/31/17.
@@ -118,10 +124,24 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         fireuser = firebaseAuth.getCurrentUser();
         dataRef = FirebaseDatabase.getInstance().getReference();
         MY_UID = fireuser.getUid();
+        writeUIDToInternalStorage(MY_UID);
         dataRef.child("Users").child(MY_UID).setValue(user);
         pbarL.dismiss();
         Toast.makeText(RegistrationActivity.this, "Saved Info", Toast.LENGTH_SHORT).show();
         startSettings();
+    }
+
+    public void writeUIDToInternalStorage(String uid) {
+        String filename = "fmf_user_profile_uid.txt";
+        String string = uid;
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void logInIfNot() {
