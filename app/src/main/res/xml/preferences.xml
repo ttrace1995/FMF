@@ -41,7 +41,7 @@
         android:id="@+id/groupname"
         android:title="@string/groupname_title"
         android:key="@string/groupname"
-        android:summary="no group active (0)"
+        android:summary="no_active_group"
         android:defaultValue="@string/groupname">
     </EditTextPreference>
 

@@ -77,11 +77,6 @@ public class SettingsActivity extends PreferenceActivity  {
         return sb.toString().trim();
     }
 
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(SettingsActivity.this, "Please hit save to return to the home screen.", Toast.LENGTH_SHORT).show();
-    }
-
     public static class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         public String MY_UID;
