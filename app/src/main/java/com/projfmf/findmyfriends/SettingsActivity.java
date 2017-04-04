@@ -41,7 +41,6 @@ public class SettingsActivity extends PreferenceActivity  {
     PreferenceFragment myPrefs;
     FragmentManager fragMan;
     FragmentTransaction fragTran;
-    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,56 +112,69 @@ public class SettingsActivity extends PreferenceActivity  {
             MY_UID = SettingsActivity.MY_UID;
 
             firebaseAuth = FirebaseAuth.getInstance();
-            fireuser = firebaseAuth.getCurrentUser();
-            dataRef = FirebaseDatabase.getInstance().getReference();
-            email_value = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
             profTitle = (PreferenceCategory)  findPreference("prof_settings_title");
             user = (EditTextPreference) findPreference("username");
             fname = (EditTextPreference) findPreference("firstName");
             lname = (EditTextPreference) findPreference("lastName");
 
-
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
-            profTitle.setTitle("Profile Settings ("+email_value+")");
-            user.setSummary(sp.getString("username", username_value));
-            fname.setSummary(sp.getString("firstName", fname_value));
-            lname.setSummary(sp.getString("lastName", lname_value));
-            //MY_UID = prefs.getString("UID", MY_UID);
+            if (firebaseAuth.getCurrentUser() == null) {
+                profTitle.setTitle("Profile Settings (please sign in)");
+                user.setSummary(sp.getString("username", "please sign in"));
+                fname.setSummary(sp.getString("firstName", "please sign in"));
+                lname.setSummary(sp.getString("lastName", "please sign in"));
+            }
+            else {
+                fireuser = firebaseAuth.getCurrentUser();
+                dataRef = FirebaseDatabase.getInstance().getReference();
+                email_value = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-            dataRef.child("Users").child(MY_UID).child("username").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    username_value = snapshot.getValue().toString();
-                    user.setSummary(username_value);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+                profTitle.setTitle("Profile Settings (" + email_value + ")");
+                user.setSummary(sp.getString("username", username_value));
+                fname.setSummary(sp.getString("firstName", fname_value));
+                lname.setSummary(sp.getString("lastName", lname_value));
+                //MY_UID = prefs.getString("UID", MY_UID);
 
-            dataRef.child("Users").child(MY_UID).child("firstName").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    fname_value = snapshot.getValue().toString();
-                    fname.setSummary(fname_value);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
 
-            dataRef.child("Users").child(MY_UID).child("lastName").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    lname_value = snapshot.getValue().toString();
-                    lname.setSummary(lname_value);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+                dataRef.child("Users").child(MY_UID).child("username").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        username_value = snapshot.getValue().toString();
+                        user.setSummary(username_value);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                dataRef.child("Users").child(MY_UID).child("firstName").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        fname_value = snapshot.getValue().toString();
+                        fname.setSummary(fname_value);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+                dataRef.child("Users").child(MY_UID).child("lastName").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        lname_value = snapshot.getValue().toString();
+                        lname.setSummary(lname_value);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
         }
 
         @Override
@@ -182,18 +194,24 @@ public class SettingsActivity extends PreferenceActivity  {
             Preference pref = findPreference(key);
             if (pref instanceof EditTextPreference && pref.getKey().equals("username")) {
                 EditTextPreference newText = (EditTextPreference) pref;
+                if (firebaseAuth.getCurrentUser() != null) {
                     username_value = newText.getText();
                     dataRef.child("Users").child(MY_UID).child(key).setValue(username_value);
+                }
             }
             else if (pref instanceof EditTextPreference && pref.getKey().equals("firstName")) {
                 EditTextPreference newText = (EditTextPreference) pref;
-                fname_value = newText.getText();
-                dataRef.child("Users").child(MY_UID).child(key).setValue(fname_value);
+                if (firebaseAuth.getCurrentUser() != null) {
+                    fname_value = newText.getText();
+                    dataRef.child("Users").child(MY_UID).child(key).setValue(fname_value);
+                }
             }
             else if (pref instanceof EditTextPreference && pref.getKey().equals("lastName")) {
                 EditTextPreference newText = (EditTextPreference) pref;
-                lname_value = newText.getText();
-                dataRef.child("Users").child(MY_UID).child(key).setValue(lname_value);
+                if (firebaseAuth.getCurrentUser() != null) {
+                    lname_value = newText.getText();
+                    dataRef.child("Users").child(MY_UID).child(key).setValue(lname_value);
+                }
             }
         }
 
