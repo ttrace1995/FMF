@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">FindMyFriends</string>
+    <string name="settings">Settings</string>
+    <string name="group_settings_title">Group Settings</string>
+    <string name="user_profile_settings">Profile Settings</string>
+    <string name="username">username</string>
+    <string name="username_title">Username</string>
+    <string name="no_name">no name</string>
+    <string name="groupname">no group active</string>
+    <string name="groupname_title">Group Name</string>
+    <string name="email_title">Email</string>
+    <string name="email">email</string>
+    <string name="user_email">no email</string>
+    <string name="firstname_title">First Name</string>
+    <string name="lastname_title">Last Name</string>
+    <string name="lastname_key">lastName</string>
+    <string name="firstname_key">firstName</string>
+    <string name="lastname">lastname goes here</string>
+    <string name="firstname">firstname goes here</string>
+</resources>

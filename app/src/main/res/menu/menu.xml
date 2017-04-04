@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/toolbar_settings"
+        android:title="@string/settings"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/spinner"
+        android:title="Group Spinner"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always"
+
+        />
+
+    <item
+        android:id="@+id/create_group"
+        android:title="Create Group"
+        android:icon="@drawable/group_icon"
+        app:showAsAction="always"
+
+        />
+
+    <item
+        android:id="@+id/login"
+        android:title="Login"
+        android:icon="@drawable/login_icon"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/logout"
+        android:title="Logout"
+        app:showAsAction="never"
+        />
+
+
+
+</menu>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preference_screen">
+
+    <PreferenceCategory
+        android:key="prof_settings_title"
+        android:title="@string/user_profile_settings"
+        />
+
+    <EditTextPreference
+        android:id="@+id/username"
+        android:title="@string/username_title"
+        android:key="@string/username"
+        android:summary="@string/app_name"
+        android:defaultValue="@string/no_name">
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:id="@+id/firstname"
+        android:title="@string/firstname_title"
+        android:key="@string/firstname_key"
+        android:summary="@string/firstname"
+        android:defaultValue="@string/no_name">
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:id="@+id/lastname"
+        android:title="@string/lastname_title"
+        android:key="@string/lastname_key"
+        android:summary="@string/lastname"
+        android:defaultValue="@string/no_name">
+    </EditTextPreference>
+
+
+    <PreferenceCategory
+        android:title="Group Settings"
+        />
+
+    <EditTextPreference
+        android:id="@+id/groupname"
+        android:title="@string/groupname_title"
+        android:key="@string/groupname"
+        android:summary="no group active (0)"
+        android:defaultValue="@string/groupname">
+    </EditTextPreference>
+
+
+    <PreferenceCategory
+        android:title="Map Settings"
+        />
+
+</PreferenceScreen>
