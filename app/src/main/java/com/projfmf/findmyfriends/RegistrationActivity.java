@@ -98,7 +98,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegistrationActivity.this, "Registration Sccess", Toast.LENGTH_SHORT).show();
-                            user = new User(username.getText().toString().trim(), emailHold, false, "first_name", "last_name");
+                            user = new User(username.getText().toString().trim(), emailHold, "first_name", "last_name");
                             checkInformation();
                         } else {
                             Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();

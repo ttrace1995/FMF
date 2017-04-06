@@ -14,16 +14,15 @@ public class User {
     String username;
     String firstName;
     String lastName;
-    boolean isSelected;
+    boolean isSelected = false;
     Location location;
 
 
     public User() {}
 
-    public User(String username, String email, boolean isSelected, String firstName, String lastName) {
+    public User(String username, String email, String firstName, String lastName) {
             this.username = username;
             this.email = email;
-            this.isSelected = isSelected;
             this.firstName = firstName;
             this.lastName = lastName;
         }

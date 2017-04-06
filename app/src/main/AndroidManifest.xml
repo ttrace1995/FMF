@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".CreateGroup" />
+        <activity android:name=".CreateUserList" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".LoginActivity" />
 

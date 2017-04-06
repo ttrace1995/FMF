@@ -2,6 +2,7 @@ package com.projfmf.findmyfriends;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  * Created by traceys5 on 3/29/17.
  */
-public class CreateGroup extends AppCompatActivity {
+public class CreateUserList extends AppCompatActivity {
 
     private ArrayList<User> userDisplays = new ArrayList<>();
     RecyclerAdapter adapter;
@@ -60,13 +61,7 @@ public class CreateGroup extends AppCompatActivity {
                 String data = "";
                 ArrayList<User> chosen = (ArrayList<User>) ((RecyclerAdapter) adapter)
                         .getPersonList();
-                for (int i = 0; i < chosen.size(); i++) {
-                    User singleUser = chosen.get(i);
-                    if (singleUser.getIsSelected() == true) {
-                        data = data + "\n" + singleUser.getUsername().toString();
-                        Toast.makeText(CreateGroup.this, data, Toast.LENGTH_SHORT).show();
-                    }
-                }
+
                 break;
             default:
                 break;
@@ -98,7 +93,7 @@ public class CreateGroup extends AppCompatActivity {
             Map singleUser = (Map) entry.getValue();
             //Get phone field and append to list
             userDisplays.add((User) new User(singleUser.get("username").toString(),
-                    singleUser.get("email").toString(), false, singleUser.get("firstName").toString(),
+                    singleUser.get("email").toString(), singleUser.get("firstName").toString(),
                     singleUser.get("lastName").toString()));
         }
         createRecycler();
