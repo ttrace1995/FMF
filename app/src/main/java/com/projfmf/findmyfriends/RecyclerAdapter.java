@@ -34,6 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         final int pos = position;
 
         viewHolder.contactName.setText(names.get(position).getUsername());
+        viewHolder.email.setText("("+names.get(position).getEmail()+")");
         viewHolder.checkBox.setChecked(names.get(position).getIsSelected());
         viewHolder.checkBox.setTag(names.get(position));
 
@@ -63,11 +64,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public TextView contactName;
         public CheckBox checkBox;
+        public TextView email;
         public User user;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             contactName = (TextView) itemLayoutView.findViewById(R.id.textView);
+            email = (TextView) itemLayoutView.findViewById(R.id.emailView);
             checkBox = (CheckBox) itemLayoutView
                     .findViewById(R.id.checkBox);
         }

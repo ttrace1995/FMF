@@ -16,17 +16,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by traceys5 on 3/29/17.
  */
 public class CreateGroup extends AppCompatActivity {
 
-    private ArrayList<User> names = new ArrayList<>();
+    private ArrayList<User> userDisplays = new ArrayList<>();
     RecyclerAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -38,8 +42,7 @@ public class CreateGroup extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Create Group!");
 
-        ActivityCompat.requestPermissions(CreateGroup.this,
-                new String[]{Manifest.permission.READ_CONTACTS}, 1);
+        getUsers();
     }
 
     @Override
@@ -64,7 +67,6 @@ public class CreateGroup extends AppCompatActivity {
                         Toast.makeText(CreateGroup.this, data, Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 break;
             default:
                 break;
@@ -72,47 +74,42 @@ public class CreateGroup extends AppCompatActivity {
         return true;
     }
 
+        public void getUsers() {
+            //Get datasnapshot at your "users" root node
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+            ref.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //Get map of users in datasnapshot
+                            collectUserInfo((Map<String,Object>) dataSnapshot.getValue());
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //handle databaseError
+                        }
+                    });
+    }
 
-    private void getContacts() {
-        Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
-        //String _ID = ContactsContract.Contacts._ID;
-        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-        //String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
-        //Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        //String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-        //String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        ContentResolver content = getContentResolver();
-        Cursor cursor = content.query(CONTENT_URI, null, null, null, null);
-        if (cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                names.add(new User(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)), "", false, null, null));
-            }
+    private void collectUserInfo(Map<String,Object> users) {
+        //iterate through each user, ignoring their UID
+        for (Map.Entry<String, Object> entry : users.entrySet()){
+            //Get user map
+            Map singleUser = (Map) entry.getValue();
+            //Get phone field and append to list
+            userDisplays.add((User) new User(singleUser.get("username").toString(),
+                    singleUser.get("email").toString(), false, singleUser.get("firstName").toString(),
+                    singleUser.get("lastName").toString()));
         }
+        createRecycler();
+    }
+
+    public void createRecycler() {
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecyclerAdapter(names);
+        adapter = new RecyclerAdapter(userDisplays);
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getContacts();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(CreateGroup.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 }
 
